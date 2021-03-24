@@ -59,3 +59,8 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+ipcMain.on('getApiKeys', (e, uuid) => {
+  const result = http.getApi(uuid)
+  console.log(result)
+})

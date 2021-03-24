@@ -1,7 +1,8 @@
 export default function () {
   return {
     dataKey: '',
-    naverId: 'jq44902wav',
+    naverId: '',
+    kakaoKey: '',
     uuid: ''
   }
 }

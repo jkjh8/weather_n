@@ -9,12 +9,20 @@
 
 <script>
 import { mapState } from 'vuex'
+import geoRs from '../api/convertXY'
+
 export default {
   name: 'Map',
+  props: ['kakao'],
   computed: {
     ...mapState({
       mapId: state => state.keys.naverId
     })
+  },
+  watch: {
+    kakao: function (newVal, oldVal) {
+      console.log(newVal)
+    }
   },
   data () {
     return {
@@ -24,14 +32,14 @@ export default {
     }
   },
   mounted () {
-    window.naver && window.naver.maps ? this.initMap() : this.addScript()
+    // window.naver && window.naver.maps ? this.initMap() : this.addScript()
   },
   methods: {
     /* global naver */
     addScript () {
       const script = document.createElement('script')
       script.onload = () => this.initMap()
-      script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${this.mapId}`
+      script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${this.mapId}&submodules=geocoder`
       document.head.appendChild(script)
     },
     initMap () {
@@ -42,14 +50,16 @@ export default {
       this.marker = new naver.maps.Marker({ position: coord, map: this.map })
       this.infoWindow = new naver.maps.InfoWindow({
         content: [
-          '<div class="iw_inner">',
-          '   <h3>서울특별시청</h3>',
+          '<div class="iw_inner" style="background: rgba(255, 255, 255, 0.7)">',
+          '   <div class="text-h5 q-mx-lg">서울특별시청</div>',
           '   <p>서울특별시 중구 태평로1가 31 | 서울특별시 중구 세종대로 110 서울특별시청<br />',
           '       02-120 | 공공,사회기관 &gt; 특별,광역시청<br />',
           '       <a href="http://www.seoul.go.kr" target="_blank">www.seoul.go.kr/</a>',
           '   </p>',
           '</div>'
-        ].join('')
+        ].join(''),
+        backgroundColor: 'transparent',
+        borderWidth: 0
       })
       naver.maps.Event.addListener(this.marker, 'click', this.clickMarker)
     },
@@ -59,6 +69,9 @@ export default {
       } else {
         this.addMarker(e.coord)
       }
+      console.log(e.coord)
+      this.geoNaverTo(e.coord)
+      this.searchCoordToAddr(e.coord)
     },
     clickMarker (e) {
       if (this.infoWindow.getMap()) {
@@ -66,6 +79,23 @@ export default {
       } else {
         this.infoWindow.open(this.map, this.marker)
       }
+    },
+    geoNaverTo (coord) {
+      const EPSG3857 = naver.maps.TransCoord.fromLatLngToEPSG3857(coord)
+      const TM128 = naver.maps.TransCoord.fromLatLngToTM128(coord)
+      const UTMK = naver.maps.TransCoord.fromLatLngToUTMK(coord)
+      const rs = geoRs(coord._lat, coord._lng)
+      const result = { LatLng: { lat: coord._lat, lng: coord._lng }, TM128: TM128, UTMK: UTMK, EPSG3857: EPSG3857, rs: rs }
+      console.log(result)
+      return result
+    },
+    searchCoordToAddr (latlng) {
+      naver.maps.Service.reverseGeocode({
+        coords: latlng,
+        orders: [naver.maps.Service.OrderType.ADDR, naver.maps.Service.OrderType.ROAD_ADDR].join(',')
+      }, function (status, response) {
+        console.log(status, response)
+      })
     }
   }
 }
