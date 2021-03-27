@@ -1,6 +1,8 @@
 import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron'
 const http = require('./api/http')
+import db from './api/db'
 
+global.db = db
 try {
   if (process.platform === 'win32' && nativeTheme.shouldUseDarkColors === true) {
     require('fs').unlinkSync(require('path').join(app.getPath('userData'), 'DevTools Extensions'))

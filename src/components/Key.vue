@@ -18,14 +18,15 @@
 
 <script>
 import { mapState } from 'vuex'
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, remote } from 'electron'
+const db = remote.getGlobal('db')
+
 export default {
   name: 'GetKey',
   computed: {
     ...mapState({
-      naver: state => state.keys.naverId,
-      kakao: state => state.keys.kakaoKey,
-      gData: state => state.keys.dataKey
+      kakao: state => state.keys.kakao,
+      gData: state => state.keys.data
     })
   },
   data () {
@@ -40,11 +41,16 @@ export default {
       switch (data.statusCode) {
         case 200: {
           const keyArray = data.data.keys
-          keyArray.forEach(key => {
-            if (key.id === 'kakao') this.$store.commit('keys/updateKakao', key.key)
-            else if (key.id === 'naver') this.$store.commit('keys/updateNaver', key.key)
-            else if (key.id === 'data') this.$store.commit('keys/updateData', key.key)
+          keyArray.forEach(async (key) => {
+            if (key.id === 'kakao') {
+              this.$store.dispatch('keys/updateKakao', key.key)
+              await db.update({ id: 'kakao' }, { $set: { key: key.key } }, { upsert: true })
+            } else if (key.id === 'data') {
+              this.$store.dispatch('keys/updateData', key.key)
+              await db.update({ id: 'data' }, { $set: { key: key.key } }, { upsert: true })
+            }
           })
+          this.$emit('close')
           break
         }
         case 400:
@@ -67,9 +73,6 @@ export default {
             message: '알 수 없는 에러가 발생하였습니다.',
             icon: 'report_problem'
           })
-      }
-      if (this.naver && this.kakao && this.gData) {
-        this.$emit('close')
       }
     })
   },

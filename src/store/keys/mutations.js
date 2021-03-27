@@ -1,12 +1,11 @@
 export function updateData (state, payload) {
-  console.log(payload.key)
-  state.dataKey = payload
+  state.data = payload
 }
 
 export function updateNaver (state, payload) {
-  state.naverId = payload.id
+  state.naver = payload
 }
 
 export function updateKakao (state, payload) {
-  state.kakaoKey = payload
+  state.kakao = payload
 }

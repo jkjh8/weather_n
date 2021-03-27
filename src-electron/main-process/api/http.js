@@ -1,10 +1,10 @@
 import { net } from 'electron'
 import api from './api'
 
-/* global mainWindow */
 export const getApi = function (UUID) {
   const result = {}
-  const request = net.request(`https://us-central1-weatherpicker.cloudfunctions.net/getApi?uuid=${UUID}`)
+  const request = net.request(`https://us-central1-weatherpicker.cloudfunctions.net/getApi?uuid=${encodeURIComponent(UUID)}`)
+  // const request = net.request(`http://localhost:5001/weatherpicker/us-central1/getApi?uuid=${encodeURIComponent(UUID)}`)
   request.on('response', (response) => {
     result.statusCode = response.statusCode
     response.on('data', (data) => {

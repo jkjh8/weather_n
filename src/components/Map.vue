@@ -16,7 +16,7 @@ export default {
   props: ['kakao'],
   computed: {
     ...mapState({
-      mapId: state => state.keys.naverId
+      mapId: state => state.keys.kakao.js
     })
   },
   watch: {
@@ -32,10 +32,14 @@ export default {
     }
   },
   mounted () {
+    console.log(this.mapId)
     // window.naver && window.naver.maps ? this.initMap() : this.addScript()
   },
   methods: {
     /* global naver */
+    init () {
+      console.log('start')
+    },
     addScript () {
       const script = document.createElement('script')
       script.onload = () => this.initMap()
