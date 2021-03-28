@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import keys from './keys'
 import weather from './weather'
+import location from './location'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,8 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       keys,
-      weather
+      weather,
+      location
     },
 
     // enable strict mode (adds overhead!)
