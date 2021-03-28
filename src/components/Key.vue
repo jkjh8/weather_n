@@ -9,6 +9,11 @@
       <q-input v-model="uuid" outlined dense></q-input>
     </q-card-section>
 
+    <q-card-section>
+      <router-link to="/extkey">외부 API키 등록</router-link>
+      <q-btn text @click="openServer">사이트 가입</q-btn>
+    </q-card-section>
+
     <q-card-actions align="right">
       <q-btn v-if="!loading" class="q-px-md" flat color="green-10" @click="getApiKeys">Send</q-btn>
       <q-spinner-clock v-else class="q-mx-lg" color="green-10" size="1.5em"></q-spinner-clock>
@@ -18,7 +23,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { ipcRenderer, remote } from 'electron'
+import { ipcRenderer, remote, shell } from 'electron'
 const db = remote.getGlobal('db')
 
 export default {
@@ -80,6 +85,9 @@ export default {
     getApiKeys () {
       this.loading = true
       ipcRenderer.send('getApiKeys', this.uuid)
+    },
+    openServer () {
+      shell.openExternal('https://weatherpicker.web.app/')
     }
   }
 }

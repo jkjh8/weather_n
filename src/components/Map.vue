@@ -1,7 +1,22 @@
 <template>
   <q-card>
-    <q-card-section>MAP</q-card-section>
-    <q-card-section>
+    <q-card-section class="q-mx-md q-py-none row items-center">
+        <q-icon size="sm" name="fas fa-map"></q-icon>
+        <span class="text-h6 q-mx-md">Location</span>
+        <!-- <span class="text-bold q-mx-md">{{ location.address }}</span> -->
+        <q-space />
+        <q-btn
+          flat
+          round
+          icon="fas fa-map-marked-alt"
+        />
+        <q-btn
+          flat
+          round
+          icon="fas fa-search-location"
+        />
+      </q-card-section>
+    <q-card-section class="q-py-none">
       <div id="map"></div>
     </q-card-section>
   </q-card>
@@ -23,12 +38,16 @@ export default {
       mapContainer: null,
       map: null,
       marker: null,
-      infoWindow: null
+      infoWindow: null,
+      geocoder: null,
+      ps: null
     }
   },
   mounted () {
     this.mapContainer = document.getElementById('map')
-    // console.log(this.mapId)
+    if (!this.map) {
+      this.init()
+    }
     // window.naver && window.naver.maps ? this.initMap() : this.addScript()
   },
   methods: {
@@ -45,8 +64,23 @@ export default {
     addMap () {
       this.map = new kakao.maps.Map(this.mapContainer, ({
         level: 3,
-        center: new kakao.maps.LatLng(37.5642135, 127.0016985)
+        center: new kakao.maps.LatLng(37.566829, 126.978655)
       }))
+      this.geocoder = new kakao.maps.services.Geocoder()
+      this.ps = new kakao.maps.services.Places()
+
+      this.moveMarker(new kakao.maps.LatLng(37.566829, 126.978655))
+    },
+    moveMarker (position) {
+      if (this.marker) {
+        this.marker.setPosition(position)
+      } else {
+        this.marker = new kakao.maps.Marker({
+          map: this.map,
+          position: position
+        })
+      }
+      this.map.setCenter(position)
     }
   }
 }
