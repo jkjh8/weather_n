@@ -39,7 +39,7 @@ export default {
         const r = await this.$axios.get(`${this.url}/getStation?uuid=${encodeURIComponent(this.uuid)}`)
         console.log(r)
         if (r) {
-          const now = moment()
+          const now = moment().format()
           const stations = r.data.stations
           this.$store.commit('stations/updateStations', stations)
           this.$store.commit('stations/updateUpdateAt', now)

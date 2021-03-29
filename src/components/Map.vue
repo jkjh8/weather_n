@@ -44,7 +44,7 @@ export default {
     }
   },
   mounted () {
-    if (!this.map) {
+    if (!this.map && this.kakaoKey) {
       this.init()
     }
     // window.naver && window.naver.maps ? this.initMap() : this.addScript()
