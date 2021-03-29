@@ -11,7 +11,7 @@
 
     <q-card-section align="right">
       <router-link style="text-decoration: none; color: black;" to="/extkey">외부 API키 등록</router-link>
-      <q-btn flat @click="openServer">사이트 가입</q-btn>
+      <q-btn class="q-ml-sm" flat @click="openServer">사이트 가입</q-btn>
     </q-card-section>
 
     <q-card-actions align="right">

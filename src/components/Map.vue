@@ -44,7 +44,6 @@ export default {
     }
   },
   mounted () {
-    this.mapContainer = document.getElementById('map')
     if (!this.map) {
       this.init()
     }
@@ -62,6 +61,7 @@ export default {
       document.head.appendChild(script)
     },
     addMap () {
+      this.mapContainer = document.getElementById('map')
       this.map = new kakao.maps.Map(this.mapContainer, ({
         level: 3,
         center: new kakao.maps.LatLng(37.566829, 126.978655)

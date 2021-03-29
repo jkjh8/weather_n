@@ -15,17 +15,17 @@
 import { mapState } from 'vuex'
 import moment from 'moment'
 import { remote } from 'electron'
+import loading from '../mixins/loads'
+
 const db = remote.getGlobal('db')
 
 export default {
+  mixins: [loading],
   computed: {
     ...mapState({
       updateAt: state => state.stations.updateAt,
       uuid: state => state.keys.uuid
     })
-  },
-  mounted () {
-    moment.locale('kr')
   },
   data () {
     return {
@@ -34,6 +34,7 @@ export default {
   },
   methods: {
     async update () {
+      this.showLoading()
       try {
         const r = await this.$axios.get(`${this.url}/getStation?uuid=${encodeURIComponent(this.uuid)}`)
         console.log(r)
@@ -42,14 +43,16 @@ export default {
           const stations = r.data.stations
           this.$store.commit('stations/updateStations', stations)
           this.$store.commit('stations/updateUpdateAt', now)
-
+          await db.update({ id: 'stations' }, { $set: { value: stations } }, { upsert: true })
+          await db.update({ id: 'stationsUpdateTime' }, { $set: { value: now } }, { upsert: true })
         }
       } catch (error) {
         console.log(error)
       }
+      this.hideLoading()
     },
     timeFormat (time) {
-      return moment(time).format()
+      return moment(time).format('YYYY-MM-DD hh:mm:ss')
     }
   }
 }

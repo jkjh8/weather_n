@@ -2,66 +2,51 @@
   <q-page>
     <Map ref="map" />
 
-    <q-dialog v-model="keyPopup" persistent>
+    <q-dialog v-model="dialog" persistent>
       <Key @close="confirmKey" />
     </q-dialog>
   </q-page>
 </template>
 
 <script>
-// import { mapState } from 'vuex'
-import { remote } from 'electron'
+import { mapState } from 'vuex'
 import Key from '../components/Key'
 import Map from '../components/Map'
-
 import location from '../mixins/location'
-
-const db = remote.getGlobal('db')
 
 export default {
   name: 'PageIndex',
   mixins: [location],
   components: { Key, Map },
-  async beforeCreate () {
-    const kakaoKey = await db.findOne({ id: 'kakao' })
-    const dataKey = await db.findOne({ id: 'data' })
-    const uuid = await db.findOne({ id: 'uuid' })
-    if (kakaoKey) {
-      this.$store.dispatch('keys/updateKakao', kakaoKey.key)
-    }
-    if (dataKey) {
-      this.$store.dispatch('keys/updateData', dataKey.key)
-    }
-    if (uuid) {
-      this.$store.commit('keys/updateUUID', uuid.value)
-      console.log('update')
-    }
-    if (!kakaoKey || !dataKey || !uuid) {
-      this.keyPopup = true
-    } else {
-      this.initMap()
-    }
-  },
-  // computed: {
-  //   ...mapState({
-  //     kakao: state => state.keys.kakao,
-  //     gData: state => state.keys.data
-  //   })
-  // },
-  data () {
-    return {
-      keyPopup: false
-    }
-  },
   async mounted () {
     this.getIpLocation()
+  },
+  computed: {
+    ...mapState({
+      kakaoKey: state => state.keys.kakao,
+      dataKey: state => state.keys.data,
+      uuid: state => state.keys.uuid
+    })
+  },
+  data () {
+    return {
+      dialog: false
+    }
   },
   methods: {
     initMap () {
       this.$refs.map.init()
     },
+    keyPopup (value) {
+      if (value) {
+        this.dialog = true
+      } else {
+        this.dialog = false
+        this.initMap()
+      }
+    },
     confirmKey () {
-      this.keyPopup = false
+      this.dialog = false
       this.initMap()
     }
   }
