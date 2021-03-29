@@ -24,11 +24,19 @@ export default {
   components: { Key, Map },
   async beforeCreate () {
     const kakaoKey = await db.findOne({ id: 'kakao' })
-    this.$store.dispatch('keys/updateKakao', kakaoKey.key)
-
     const dataKey = await db.findOne({ id: 'data' })
-    this.$store.dispatch('keys/updateData', dataKey.key)
-    if (!kakaoKey || !dataKey) {
+    const uuid = await db.findOne({ id: 'uuid' })
+    if (kakaoKey) {
+      this.$store.dispatch('keys/updateKakao', kakaoKey.key)
+    }
+    if (dataKey) {
+      this.$store.dispatch('keys/updateData', dataKey.key)
+    }
+    if (uuid) {
+      this.$store.commit('keys/updateUUID', uuid.value)
+      console.log('update')
+    }
+    if (!kakaoKey || !dataKey || !uuid) {
       this.keyPopup = true
     } else {
       this.initMap()

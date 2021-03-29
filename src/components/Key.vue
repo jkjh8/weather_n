@@ -9,25 +9,26 @@
       <q-input v-model="uuid" outlined dense></q-input>
     </q-card-section>
 
-    <q-card-section>
-      <router-link to="/extkey">외부 API키 등록</router-link>
-      <q-btn text @click="openServer">사이트 가입</q-btn>
+    <q-card-section align="right">
+      <router-link style="text-decoration: none; color: black;" to="/extkey">외부 API키 등록</router-link>
+      <q-btn flat @click="openServer">사이트 가입</q-btn>
     </q-card-section>
 
     <q-card-actions align="right">
-      <q-btn v-if="!loading" class="q-px-md" flat color="green-10" @click="getApiKeys">Send</q-btn>
-      <q-spinner-clock v-else class="q-mx-lg" color="green-10" size="1.5em"></q-spinner-clock>
+      <q-btn class="q-px-md" flat color="green-10" @click="getApiKeys">Send</q-btn>
     </q-card-actions>
   </q-card>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { ipcRenderer, remote, shell } from 'electron'
+import { remote, shell } from 'electron'
+import loading from '../mixins/loads'
 const db = remote.getGlobal('db')
 
 export default {
   name: 'GetKey',
+  mixins: [loading],
   computed: {
     ...mapState({
       kakao: state => state.keys.kakao,
@@ -37,13 +38,19 @@ export default {
   data () {
     return {
       uuid: '',
-      loading: false
+      url: 'https://us-central1-weatherpicker.cloudfunctions.net'
     }
   },
-  mounted () {
-    ipcRenderer.on('recvKey', (e, data) => {
-      this.loading = false
-      switch (data.statusCode) {
+  methods: {
+    async getApiKeys () {
+      this.showLoading()
+      this.updateUUID()
+      const result = await this.$axios.get(`${this.url}/getApi?uuid=${encodeURIComponent(this.uuid)}`)
+      console.log(result)
+      this.updateKeys(result)
+    },
+    updateKeys (data) {
+      switch (data.status) {
         case 200: {
           const keyArray = data.data.keys
           keyArray.forEach(async (key) => {
@@ -79,12 +86,11 @@ export default {
             icon: 'report_problem'
           })
       }
-    })
-  },
-  methods: {
-    getApiKeys () {
-      this.loading = true
-      ipcRenderer.send('getApiKeys', this.uuid)
+      this.hideLoading()
+    },
+    async updateUUID () {
+      this.$store.commit('keys/updateUUID', this.uuid)
+      await db.update({ id: 'uuid' }, { $set: { value: this.uuid } }, { upsert: true })
     },
     openServer () {
       shell.openExternal('https://weatherpicker.web.app/')

@@ -9,3 +9,7 @@ export function updateNaver (state, payload) {
 export function updateKakao (state, payload) {
   state.kakao = payload
 }
+
+export function updateUUID (state, payload) {
+  state.uuid = payload
+}
