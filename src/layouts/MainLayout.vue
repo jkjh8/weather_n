@@ -21,7 +21,7 @@
 <script>
 import dbFunctions from '../mixins/db'
 import Key from '../components/Key'
-import { remote } from 'electron'
+import { ipcRenderer, remote } from 'electron'
 const db = remote.getGlobal('db')
 
 export default {
@@ -34,14 +34,13 @@ export default {
     }
   },
   async created () {
-    // const kakaoKey = db.get('keys').find({ id: 'kakao' }).value()
-    // if (kakaoKey) {
-    //   this.$store.dispatch('keys/updateKakao', kakaoKey.value)
-    // } else {
-    //   this.$store.dispatch('keys/updateKakao', null)
-    //   this.dialog = true
-    // }
+    ipcRenderer.on('keyPopup', (e) => {
+      this.dialog = true
+    })
+
     const keys = db.get('keys').value()
+    if (keys.length === 0) this.dialog = true
+
     keys.forEach(key => {
       switch (key.id) {
         case 'kakao':
@@ -64,43 +63,6 @@ export default {
     if (location) {
       this.$store.commit('location/updateLocation', location.value)
     }
-    // // kakao api key
-    // db.findOne({ id: 'kakao' }).then(res => {
-    //   if (res.key) {
-    //     this.$store.dispatch('keys/updateKakao', res.key)
-    //     this.$refs.view.initMap()
-    //   } else {
-    //     return this.$refs.view.keyPopup(true)
-    //   }
-    // })
-    // // data.go.kr api key
-    // db.findOne({ id: 'data' }).then(res => {
-    //   if (res.key) {
-    //     this.$store.dispatch('keys/updateData', res.key)
-    //   } else {
-    //     return this.$refs.view.keyPopup(true)
-    //   }
-    // })
-    // // uuid
-    // db.findOne({ id: 'uuid' }).then(res => {
-    //   if (res.value) {
-    //     this.$store.commit('keys/updateUUID', res.value)
-    //   } else {
-    //     return this.$refs.view.keyPopup(true)
-    //   }
-    // })
-    // // air korea stations
-    // db.findOne({ id: 'stations' }).then(res => {
-    //   this.$store.commit('stations/updateStations', res.value)
-    // }).catch(err => {
-    //   console.log('stations: ', err)
-    // })
-    // // stations list update time
-    // db.findOne({ id: 'stationsUpdateTime' }).then(res => {
-    //   this.$store.commit('stations/updateUpdateAt', res.value)
-    // }).catch(err => {
-    //   console.log('stations: ', err)
-    // })
   }
 }
 </script>

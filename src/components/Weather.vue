@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { ipcRenderer } from 'electron'
 import { mapState } from 'vuex'
 import moment from 'moment'
 
@@ -37,13 +38,19 @@ export default {
       url: 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst'
     }
   },
+  mounted () {
+    ipcRenderer.on('weather', (e, data) => {
+      console.log(data)
+    })
+  },
   methods: {
     getWeather () {
       const time = this.getTime()
       const query = `ServiceKey=${this.dataKey}&pageNo=1&numOfRows=10&dataType=json&base_date=${time.date}&base_time=${time.time}&nx=${this.location.xy.x}&ny=${this.location.xy.y}`
-      this.$axios.get(`${this.url}?${query}`).then(res => {
-        console.log(res)
-      })
+      ipcRenderer.send('weather', `${this.url}?${query}`)
+      // this.$axios.get(`${this.url}?${query}`).then(res => {
+      //   console.log(res)
+      // })
     },
     getTime () {
       const now = moment()
