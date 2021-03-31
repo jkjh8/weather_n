@@ -1,9 +1,9 @@
 <template>
-  <q-card>
-    <q-card-section class="q-mx-md q-py-none row items-center">
+  <q-card flat>
+    <q-card-section class="q-ml-sm q-py-none row items-center">
         <q-icon size="sm" name="cloud"></q-icon>
         <span class="text-h6 q-mx-md">Weather</span>
-        <!-- <span class="text-bold q-mx-md">{{ location.address }}</span> -->
+        <span class="q-mx-md">발표 시간: {{ weather.time }}</span>
         <q-space />
         <!-- <q-btn
           flat
@@ -14,7 +14,7 @@
         <q-btn
           flat
           round
-          icon="fas fa-sync"
+          icon="sync"
           @click="getWeather"
         />
       </q-card-section>
@@ -30,7 +30,8 @@ export default {
   computed: {
     ...mapState({
       dataKey: state => state.keys.data,
-      location: state => state.location.location
+      location: state => state.location.location,
+      weather: state => state.weather.weather
     })
   },
   data () {
@@ -39,12 +40,25 @@ export default {
     }
   },
   mounted () {
-    ipcRenderer.on('weather', (e, data) => {
-      console.log(data)
+    ipcRenderer.on('weather', (e, d) => {
+      if (d.header.resultCode === '00') {
+        const data = d.body.items.item
+        this.$store.dispatch('weather/updateWeather', data)
+      }
     })
   },
   methods: {
     getWeather () {
+      if (!this.location) {
+        return this.$q.notify({
+          timeout: 1000,
+          color: 'negative',
+          message: '지역선택이 되지 않았습니다.',
+          icon: 'report_problem',
+          position: 'center',
+          actions: [{ icon: 'close', color: 'white' }]
+        })
+      }
       const time = this.getTime()
       const query = `ServiceKey=${this.dataKey}&pageNo=1&numOfRows=10&dataType=json&base_date=${time.date}&base_time=${time.time}&nx=${this.location.xy.x}&ny=${this.location.xy.y}`
       ipcRenderer.send('weather', `${this.url}?${query}`)

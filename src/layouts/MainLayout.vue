@@ -9,7 +9,7 @@
     </q-header>
 
     <q-dialog v-model="dialog" persistent>
-      <Key @close="dialog=false" />
+      <Key @close="dialog=false" @init="init" />
     </q-dialog>
 
     <q-page-container>
@@ -62,6 +62,11 @@ export default {
     const location = db.get('location').find({ id: 'location' }).value()
     if (location) {
       this.$store.commit('location/updateLocation', location.value)
+    }
+  },
+  methods: {
+    init () {
+      this.$refs.view.initMap()
     }
   }
 }

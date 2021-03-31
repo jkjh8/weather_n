@@ -46,8 +46,10 @@ function createWindow () {
     webPreferences: {
       // Change from /quasar.conf.js > electron > nodeIntegration;
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
-      nodeIntegration: process.env.QUASAR_NODE_INTEGRATION,
-      nodeIntegrationInWorker: process.env.QUASAR_NODE_INTEGRATION
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true,
+      contextIsolation: false,
+      enableRemoteModule: true
 
       // More info: /quasar-cli/developing-electron-apps/electron-preload-script
       // preload: path.resolve(__dirname, 'electron-preload.js')
@@ -81,7 +83,8 @@ ipcMain.on('weather', (e, query) => {
   const req = net.request(query)
   req.on('response', (response) => {
     response.on('data', (chunk) => {
-      mainWindow.webContents.send('weather', JSON.parse(chunk.toString()))
+      const rtJson = JSON.parse(chunk.toString())
+      mainWindow.webContents.send('weather', rtJson.response)
     })
   })
   req.end()

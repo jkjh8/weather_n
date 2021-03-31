@@ -1,9 +1,9 @@
 <template>
-  <q-card>
-    <q-card-section class="q-mx-md q-py-none row items-center">
-        <q-icon size="sm" name="fas fa-map"></q-icon>
+  <q-card flat>
+    <q-card-section class="q-ml-sd q-py-none row items-center">
+        <q-icon size="sm" name="location_on"></q-icon>
         <span class="text-h6 q-mx-md">Location</span>
-        <!-- <span class="text-bold q-mx-md">{{ location.address }}</span> -->
+        <span class="text-bold q-mx-md">{{ location.address_name }}</span>
         <q-space />
         <!-- <q-btn
           flat
@@ -14,7 +14,7 @@
         <q-btn
           flat
           round
-          icon="fas fa-search-location"
+          icon="search"
           @click="dialog=true"
         />
       </q-card-section>

@@ -95,6 +95,7 @@ export default {
           })
       }
       this.hideLoading()
+      this.$emit()
     },
     async updateUUID () {
       this.$store.commit('keys/updateUUID', this.uuid)
