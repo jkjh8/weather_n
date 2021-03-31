@@ -1,8 +1,8 @@
 export default function () {
   return {
-    data: '',
-    naver: '',
-    kakao: '',
-    uuid: ''
+    data: null,
+    naver: null,
+    kakao: null,
+    uuid: null
   }
 }

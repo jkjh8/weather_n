@@ -1,8 +1,23 @@
-import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron'
-const http = require('./api/http')
-import db from './api/db'
+import { app, BrowserWindow, ipcMain, net, nativeTheme } from 'electron'
+import path from 'path'
+// const http = require('./api/http')
+// import db from './api/db'
 
-global.db = db
+// global.db = db
+
+import low from 'lowdb'
+import FileAsync from 'lowdb/adapters/FileAsync'
+let db
+
+async function dbInit () {
+  const adapter = new FileAsync(path.join(app.getPath('userData'), '/.db/db.json'))
+  db = await low(adapter)
+  db.defaults({ stations: [], keys: [], location: [], setup: [] }).write()
+  global.db = db
+}
+
+dbInit()
+
 try {
   if (process.platform === 'win32' && nativeTheme.shouldUseDarkColors === true) {
     require('fs').unlinkSync(require('path').join(app.getPath('userData'), 'DevTools Extensions'))
@@ -60,4 +75,20 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+ipcMain.on('weather', (e, query) => {
+  const req = net.request(query)
+  req.on('response', (response) => {
+    // console.log(`STATUS: ${response.statusCode}`)
+    // console.log(`HEADERS: ${JSON.stringify(response.headers)}`)
+    response.on('data', (chunk) => {
+      console.log(`BODY: ${chunk}`)
+      mainWindow.webContents.send('weatherData', JSON.parse(chunk.toString()))
+    })
+    response.on('end', () => {
+      console.log('No more data in response.')
+    })
+  })
+  req.end()
 })

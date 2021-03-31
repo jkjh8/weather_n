@@ -2,7 +2,7 @@
   <q-card>
     <q-card-section class="fit row no-wrap">
       <div>
-        <div class="text-subtitle1">Get Stations</div>
+        <div class="text-subtitle1">Stations</div>
         <div class="text-caption">{{ timeFormat(updateAt) }}</div>
       </div>
       <q-space />
@@ -37,14 +37,18 @@ export default {
       this.showLoading()
       try {
         const r = await this.$axios.get(`${this.url}/getStation?uuid=${encodeURIComponent(this.uuid)}`)
-        console.log(r)
         if (r) {
           const now = moment().format()
           const stations = r.data.stations
           this.$store.commit('stations/updateStations', stations)
           this.$store.commit('stations/updateUpdateAt', now)
-          await db.update({ id: 'stations' }, { $set: { value: stations } }, { upsert: true })
-          await db.update({ id: 'stationsUpdateTime' }, { $set: { value: now } }, { upsert: true })
+          if (db.get('stations').find({ id: 'stations' }).value()) {
+            const result = db.get('stations').find({ id: 'stations' }).assign({ time: now, value: stations }).write()
+            console.log(result)
+          } else {
+            const result = db.get('stations').push({ id: 'stations', time: now, value: stations }).write()
+            console.log(result)
+          }
         }
       } catch (error) {
         console.log(error)

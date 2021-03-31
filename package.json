@@ -13,7 +13,9 @@
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "cors": "^2.8.5",
     "crypto-js": "^4.0.0",
+    "lowdb": "^1.0.0",
     "moment": "^2.29.1",
     "nedb-promises": "^4.1.1",
     "quasar": "^1.0.0"

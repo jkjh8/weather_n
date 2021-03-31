@@ -6,6 +6,7 @@ export default {
           lat: res.data.lat,
           lng: res.data.lng
         })
+        return { lat: res.data.lat, lng: res.data.lng }
       })
     }
   }

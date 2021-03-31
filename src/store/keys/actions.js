@@ -5,13 +5,9 @@ function decode (data) {
 }
 
 export function updateData ({ commit }, payload) {
-  const key = decode(payload.key)
-  commit('updateData', key)
+  commit('updateData', decode(payload))
 }
 
 export function updateKakao ({ commit }, payload) {
-  const kakao = { rest: '', js: '' }
-  kakao.rest = decode(payload.rest)
-  kakao.js = decode(payload.js)
-  commit('updateKakao', kakao)
+  commit('updateKakao', decode(payload))
 }

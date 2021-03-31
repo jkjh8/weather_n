@@ -1,4 +1,4 @@
-export default function dfsXyConv (v1, v2) {
+export default function (v1, v2) {
   const { PI, tan, log, cos, pow, floor, sin } = Math
   // const { PI, tan, log, cos, pow, floor, sin, sqrt, atan, abs, atan2 } = Math
 

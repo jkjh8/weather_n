@@ -1,23 +1,20 @@
 <template>
   <q-page>
     <Map ref="map" />
-
-    <q-dialog v-model="dialog" persistent>
-      <Key @close="confirmKey" />
-    </q-dialog>
+    <Weather />
   </q-page>
 </template>
 
 <script>
+import Weather from '../components/Weather'
 import { mapState } from 'vuex'
-import Key from '../components/Key'
 import Map from '../components/Map'
 import location from '../mixins/location'
 
 export default {
   name: 'PageIndex',
   mixins: [location],
-  components: { Key, Map },
+  components: { Map, Weather },
   async mounted () {
     this.getIpLocation()
   },

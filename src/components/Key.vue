@@ -56,10 +56,18 @@ export default {
           keyArray.forEach(async (key) => {
             if (key.id === 'kakao') {
               this.$store.dispatch('keys/updateKakao', key.key)
-              await db.update({ id: 'kakao' }, { $set: { key: key.key } }, { upsert: true })
+              if (db.get('keys').find({ id: 'kakao' }).value()) {
+                db.get('keys').find({ id: 'kakao' }).assign({ value: key.key.js }).write()
+              } else {
+                db.get('keys').push({ id: 'kakao', value: key.key.js }).write()
+              }
             } else if (key.id === 'data') {
               this.$store.dispatch('keys/updateData', key.key)
-              await db.update({ id: 'data' }, { $set: { key: key.key } }, { upsert: true })
+              if (db.get('keys').find({ id: 'data' }).value()) {
+                db.get('keys').find({ id: 'data' }).assign({ value: key.key.key }).write()
+              } else {
+                db.get('keys').push({ id: 'data', value: key.key.key }).write()
+              }
             }
           })
           this.$emit('close')
@@ -90,7 +98,12 @@ export default {
     },
     async updateUUID () {
       this.$store.commit('keys/updateUUID', this.uuid)
-      await db.update({ id: 'uuid' }, { $set: { value: this.uuid } }, { upsert: true })
+      // await db.get('keys').upsert({ id: 'uuid', value: this.uuid })
+      if (db.get('keys').find({ id: 'uuid' }).value()) {
+        db.get('keys').find({ id: 'uuid' }).assign({ value: this.uuid }).write()
+      } else {
+        db.get('keys').push({ id: 'uuid', value: this.uuid }).write()
+      }
     },
     openServer () {
       shell.openExternal('https://weatherpicker.web.app/')
