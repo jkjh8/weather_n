@@ -2,19 +2,21 @@
   <q-page>
     <Map ref="map" />
     <Weather />
+    <Dust />
   </q-page>
 </template>
 
 <script>
-import Weather from '../components/Weather'
 import { mapState } from 'vuex'
 import Map from '../components/Map'
+import Weather from '../components/Weather'
+import Dust from '../components/Dust'
 import location from '../mixins/location'
 
 export default {
   name: 'PageIndex',
   mixins: [location],
-  components: { Map, Weather },
+  components: { Map, Weather, Dust },
   async mounted () {
     this.getIpLocation()
   },

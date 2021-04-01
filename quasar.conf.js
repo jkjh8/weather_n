@@ -75,7 +75,17 @@ module.exports = function (/* ctx */) {
     devServer: {
       https: false,
       port: 8080,
-      open: true // opens browser window automatically
+      open: true, // opens browser window automatically
+      proxy: {
+        '/B552584': {
+          target: 'http://apis.data.go.kr',
+          changeOrigin: true
+        },
+        '/1360000': {
+          target: 'http://apis.data.go.kr',
+          changeOrigin: true
+        }
+      }
     },
 
     // https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework

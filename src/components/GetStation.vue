@@ -42,13 +42,12 @@ export default {
           const stations = r.data.stations
           this.$store.commit('stations/updateStations', stations)
           this.$store.commit('stations/updateUpdateAt', now)
-          if (db.get('stations').find({ id: 'stations' }).value()) {
-            const result = db.get('stations').find({ id: 'stations' }).assign({ time: now, value: stations }).write()
-            console.log(result)
-          } else {
-            const result = db.get('stations').push({ id: 'stations', time: now, value: stations }).write()
-            console.log(result)
-          }
+          await db.setup.update({ id: 'updateStationsAt' }, { $set: { value: now } }, { upsert: true })
+          const stationsArr = Object.values(stations)
+          stationsArr.forEach(item => {
+            db.stations.update({ name: item.name }, { $set: item }, { upsert: true })
+          })
+          // await db.stations.update({ id: 'stations' }, { $set: { value: stations } }, { upsert: true })
         }
       } catch (error) {
         console.log(error)

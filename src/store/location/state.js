@@ -1,6 +1,8 @@
 export default function () {
   return {
     location: null,
-    ipLocation: null
+    ipLocation: null,
+    nearStations: [],
+    dustStation: null
   }
 }

@@ -1,22 +1,22 @@
 import { app, BrowserWindow, ipcMain, net, nativeTheme } from 'electron'
-import path from 'path'
+// import path from 'path'
 // const http = require('./api/http')
-// import db from './api/db'
+import db from './api/db'
 
-// global.db = db
+global.db = db
 
-import low from 'lowdb'
-import FileAsync from 'lowdb/adapters/FileAsync'
-let db
+// import low from 'lowdb'
+// import FileAsync from 'lowdb/adapters/FileAsync'
+// let db
 
-async function dbInit () {
-  const adapter = new FileAsync(path.join(app.getPath('userData'), '/.db/db.json'))
-  db = await low(adapter)
-  db.defaults({ stations: [], keys: [], location: [], setup: [] }).write()
-  global.db = db
-}
+// async function dbInit () {
+//   const adapter = new FileAsync(path.join(app.getPath('userData'), '/.db/db.json'))
+//   db = await low(adapter)
+//   db.defaults({ stations: [], keys: [], location: [], setup: [] }).write()
+//   global.db = db
+// }
 
-dbInit()
+// dbInit()
 
 try {
   if (process.platform === 'win32' && nativeTheme.shouldUseDarkColors === true) {
@@ -85,6 +85,18 @@ ipcMain.on('weather', (e, query) => {
     response.on('data', (chunk) => {
       const rtJson = JSON.parse(chunk.toString())
       mainWindow.webContents.send('weather', rtJson.response)
+    })
+  })
+  req.end()
+})
+
+ipcMain.on('dust', (e, query) => {
+  const req = net.request(query)
+  req.on('response', (response) => {
+    response.on('data', (chunk) => {
+      console.log(chunk.toString())
+      // const rtJson = JSON.parse(chunk.toString())
+      // mainWindow.webContents.send('dust', rtJson.response)
     })
   })
   req.end()

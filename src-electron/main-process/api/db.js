@@ -9,4 +9,10 @@ function dbInit (file) {
   })
 }
 
-export default dbInit('setup.db')
+export default {
+  setup: dbInit('setup.db'),
+  dust: dbInit('dust.db'),
+  stations: dbInit('stations.db'),
+  location: dbInit('location.db'),
+  keys: dbInit('auth.db')
+}

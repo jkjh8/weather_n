@@ -1,16 +1,23 @@
 <template>
   <q-card flat>
-    <q-card-section class="q-ml-sm q-py-none row items-center">
+    <q-card-section class="q-ml-sm row items-center">
         <q-icon size="sm" name="cloud"></q-icon>
         <span class="text-h6 q-mx-md">Weather</span>
-        <span class="q-mx-md">발표 시간: {{ weather.time }}</span>
-        <q-space />
-        <!-- <q-btn
+        <span  v-if="weatherDetail&&weather" class="q-mx-md row items-center">
+          <span>발표 시간: {{ weatherDetail.time }}</span>
+          <span class="q-ml-md">
+            <q-icon  size="sm" :name="weatherDetail.icon" :color="weatherDetail.color"></q-icon>
+          </span>
+          <span>{{ weatherDetail.name }}</span>
+          <span class="q-ml-md">기온: {{ weatherDetail.temp }} {{ "&#8451;" }}</span>
+        </span>
+        <q-btn
           flat
           round
-          icon="fas fa-map-marked-alt"
-          @click="clickIpLocationBtn"
-        /> -->
+          icon="lens_blur"
+          @click="dialog=true"
+        />
+        <q-space />
         <q-btn
           flat
           round
@@ -18,25 +25,33 @@
           @click="getWeather"
         />
       </q-card-section>
+
+      <q-dialog v-model="dialog">
+        <Detail />
+      </q-dialog>
   </q-card>
 </template>
 
 <script>
 import { ipcRenderer } from 'electron'
 import { mapState } from 'vuex'
+import Detail from './WeatherDetail'
 import moment from 'moment'
 
 export default {
+  components: { Detail },
   computed: {
     ...mapState({
       dataKey: state => state.keys.data,
       location: state => state.location.location,
-      weather: state => state.weather.weather
+      weather: state => state.weather.weather,
+      weatherDetail: state => state.weather.weatherDetail
     })
   },
   data () {
     return {
-      url: 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst'
+      url: '/1360000/VilageFcstInfoService/getUltraSrtNcst',
+      dialog: false
     }
   },
   mounted () {
@@ -61,10 +76,14 @@ export default {
       }
       const time = this.getTime()
       const query = `ServiceKey=${this.dataKey}&pageNo=1&numOfRows=10&dataType=json&base_date=${time.date}&base_time=${time.time}&nx=${this.location.xy.x}&ny=${this.location.xy.y}`
-      ipcRenderer.send('weather', `${this.url}?${query}`)
-      // this.$axios.get(`${this.url}?${query}`).then(res => {
-      //   console.log(res)
-      // })
+      // ipcRenderer.send('weather', `${this.url}?${query}`)
+      this.$axios.get(`${this.url}?${query}`).then(res => {
+        console.log(res)
+        if (res.data.response.header.resultCode === '00') {
+          const data = res.data.response.body.items.item
+          this.$store.dispatch('weather/updateWeather', data)
+        }
+      })
     },
     getTime () {
       const now = moment()

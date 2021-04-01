@@ -5,6 +5,7 @@ import keys from './keys'
 import weather from './weather'
 import location from './location'
 import stations from './stations'
+import dust from './dust'
 
 Vue.use(Vuex)
 
@@ -23,7 +24,8 @@ export default function (/* { ssrContext } */) {
       keys,
       weather,
       location,
-      stations
+      stations,
+      dust
     },
 
     // enable strict mode (adds overhead!)

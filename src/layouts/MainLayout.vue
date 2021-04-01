@@ -19,14 +19,14 @@
 </template>
 
 <script>
-import dbFunctions from '../mixins/db'
+// import dbFunctions from '../mixins/db'
 import Key from '../components/Key'
 import { ipcRenderer, remote } from 'electron'
 const db = remote.getGlobal('db')
 
 export default {
   name: 'MainLayout',
-  mixins: [dbFunctions],
+  // mixins: [dbFunctions],
   components: { Key },
   data () {
     return {
@@ -37,9 +37,10 @@ export default {
     ipcRenderer.on('keyPopup', (e) => {
       this.dialog = true
     })
-
-    const keys = db.get('keys').value()
-    if (keys.length === 0) this.dialog = true
+    const keys = await db.keys.find({})
+    if (keys.length === 0) {
+      this.dialog = true
+    }
 
     keys.forEach(key => {
       switch (key.id) {
@@ -54,14 +55,26 @@ export default {
           break
       }
     })
-    const stations = db.get('stations').find({ id: 'stations' }).value()
-    if (stations) {
+    const stations = await db.stations.find({})
+    const updateAt = await db.setup.findOne({ id: 'updateStationsAt' })
+    if (stations.length > 0) {
       this.$store.commit('stations/updateStations', stations.value)
-      this.$store.commit('stations/updateUpdateAt', stations.time)
     }
-    const location = db.get('location').find({ id: 'location' }).value()
+    if (updateAt) {
+      this.$store.commit('stations/updateUpdateAt', updateAt.value)
+    }
+    const location = await db.location.findOne({ id: 'location' })
     if (location) {
       this.$store.commit('location/updateLocation', location.value)
+    }
+    const nearStations = await db.location.findOne({ id: 'nearStations' })
+    if (nearStations) {
+      console.log(nearStations)
+      this.$store.commit('location/updateNearStations', nearStations.value)
+    }
+    const dustStation = await db.location.findOne({ id: 'dustStation' })
+    if (dustStation) {
+      this.$store.commit('location/updateDustStation', dustStation.value)
     }
   },
   methods: {

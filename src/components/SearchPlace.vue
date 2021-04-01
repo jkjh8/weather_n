@@ -49,7 +49,7 @@
       </q-list>
     </q-card-section>
     <q-card-section>
-      <div id="mapDialog" style="width: 100%; height: 350px;position: relative;">
+      <div id="mapDialog" style="width: 100%; height: 300px;position: relative;">
         <!-- <div
           v-if="location && location.address_name"
           class="q-ma-md q-pa-sm text-bold text-white bg-black"
@@ -110,14 +110,21 @@ export default {
     /* global kakao */
     addMap () {
       this.mapContainer = document.getElementById('mapDialog')
+
+      let position
+      if (this.location) {
+        position = new kakao.maps.LatLng(this.location.y, this.location.x)
+      } else {
+        position = new kakao.maps.LatLng(37.566829, 126.978655)
+      }
+
       this.map = new kakao.maps.Map(this.mapContainer, ({
         level: 3,
-        center: new kakao.maps.LatLng(37.566829, 126.978655)
+        center: position
       }))
       this.geocoder = new kakao.maps.services.Geocoder()
       this.ps = new kakao.maps.services.Places()
 
-      const position = new kakao.maps.LatLng(37.566829, 126.978655)
       this.moveMarker(position)
       this.map.setCenter(position)
     },
@@ -196,7 +203,7 @@ export default {
           return '경북'
         case '경상남도':
           return '경남'
-        case '"제주특별자치도"':
+        case '제주특별자치도':
           return '제주'
       }
     },
@@ -224,12 +231,8 @@ export default {
     submit () {
       if (this.place) {
         this.place.xy = convertXY(this.place.y, this.place.x)
-        this.$store.commit('location/updateLocation', this.place)
-        if (db.get('location').find({ id: 'location' }).value()) {
-          db.get('location').find({ id: 'location' }).assign({ value: this.place }).write()
-        } else {
-          db.get('location').push({ id: 'location', value: this.place }).write()
-        }
+        this.$store.dispatch('location/updateLocation', this.place)
+        db.location.update({ id: 'location' }, { $set: { value: this.place } }, { upsert: true })
       }
     }
   }

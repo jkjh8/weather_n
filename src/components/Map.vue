@@ -3,7 +3,7 @@
     <q-card-section class="q-ml-sd q-py-none row items-center">
         <q-icon size="sm" name="location_on"></q-icon>
         <span class="text-h6 q-mx-md">Location</span>
-        <span class="text-bold q-mx-md">{{ location.address_name }}</span>
+        <span v-if="location" class="text-bold q-mx-md">{{ location.address_name }}</span>
         <q-space />
         <!-- <q-btn
           flat
@@ -51,24 +51,30 @@ export default {
       marker: null,
       infoWindow: null,
       geocoder: null,
-      ps: null
+      ps: null,
+      timer: null
     }
   },
   mounted () {
-    console.log(this.location)
-    if (!this.map && this.kakaoKey) {
+    this.timer = setInterval(() => {
       this.init()
-    }
+      console.log('loading...')
+    }, 1000)
   },
   watch: {
     location: function (newVal) {
-      this.moveMarkerLatLng(newVal.y, newVal.x)
+      if (this.map) {
+        this.moveMarkerLatLng(newVal.y, newVal.x)
+      }
     }
   },
   methods: {
     /* global kakao */
     init () {
-      window.kakao && window.kakao.maps ? this.addMap() : this.addScript()
+      if (this.kakaoKey && !this.map) {
+        window.kakao && window.kakao.maps ? this.addMap() : this.addScript()
+        clearInterval(this.timer)
+      }
     },
     addScript () {
       const script = document.createElement('script')
@@ -121,7 +127,7 @@ export default {
     async clickIpLocationBtn () {
       const result = await this.$axios.get('http://extreme-ip-lookup.com/json')
       console.log(result)
-      this.$store.commit('location/updateIpLocation', { lat: result.data.lat, lng: result.data.lon })
+      this.$store.dispatch('location/updateIpLocation', { lat: result.data.lat, lng: result.data.lon })
       this.moveMarkerLatLng({ lat: result.data.lat, lng: result.data.lon })
     }
   }
