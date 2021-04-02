@@ -124,8 +124,10 @@ export default {
       }))
       this.geocoder = new kakao.maps.services.Geocoder()
       this.ps = new kakao.maps.services.Places()
-
-      this.moveMarker(position)
+      if (this.location) {
+        this.moveMarker(position)
+      }
+      // this.moveMarker(position)
       this.map.setCenter(position)
     },
 

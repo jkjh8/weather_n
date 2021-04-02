@@ -7,4 +7,8 @@ const api = axios.create({
   baseURL: 'https://us-central1-weatherpicker.cloudfunctions.net'
 })
 
-export { axios, api }
+const apiData = axios.create({
+  baseURL: process.env.DEV ? '' : 'http://apis.data.go.kr'
+})
+
+export { axios, api, apiData }

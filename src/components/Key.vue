@@ -23,6 +23,7 @@
 <script>
 import { mapState } from 'vuex'
 import { remote, shell } from 'electron'
+import { api } from '../boot/axios'
 import loading from '../mixins/loads'
 const db = remote.getGlobal('db')
 
@@ -37,16 +38,14 @@ export default {
   },
   data () {
     return {
-      uuid: '',
-      url: 'https://us-central1-weatherpicker.cloudfunctions.net'
+      uuid: ''
     }
   },
   methods: {
     async getApiKeys () {
       this.showLoading()
       this.updateUUID()
-      const result = await this.$axios.get(`${this.url}/getApi?uuid=${encodeURIComponent(this.uuid)}`)
-      console.log(result)
+      const result = await api.get(`/getApi?uuid=${this.uuid}`)
       this.updateKeys(result)
     },
     updateKeys (data) {
@@ -87,7 +86,7 @@ export default {
           })
       }
       this.hideLoading()
-      this.$emit()
+      // this.$emit()
     },
     async updateUUID () {
       this.$store.commit('keys/updateUUID', this.uuid)

@@ -32,7 +32,7 @@ module.exports = function (/* ctx */) {
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
       // 'ionicons-v4',
-      // 'mdi-v5',
+      'mdi-v5',
       'fontawesome-v5',
       // 'eva-icons',
       // 'themify',
@@ -84,6 +84,11 @@ module.exports = function (/* ctx */) {
         '/1360000': {
           target: 'http://apis.data.go.kr',
           changeOrigin: true
+        },
+        '/getStations': {
+          target: 'https://us-central1-weatherpicker.cloudfunctions.net',
+          changeOrigin: true,
+          ws: true
         }
       }
     },
@@ -173,7 +178,7 @@ module.exports = function (/* ctx */) {
 
     // Full list of options: https://v1.quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
     electron: {
-      bundler: 'packager', // 'packager' or 'builder'
+      bundler: 'builder', // 'packager' or 'builder'
 
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options

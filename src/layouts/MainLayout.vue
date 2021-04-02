@@ -9,7 +9,7 @@
     </q-header>
 
     <q-dialog v-model="dialog" persistent>
-      <Key @close="dialog=false" @init="init" />
+      <Key @close="dialog=false" />
     </q-dialog>
 
     <q-page-container>
@@ -20,25 +20,36 @@
 
 <script>
 // import dbFunctions from '../mixins/db'
+import { mapState } from 'vuex'
 import Key from '../components/Key'
+import dustFn from '../mixins/dust'
+import weatherFn from '../mixins/weather'
 import { ipcRenderer, remote } from 'electron'
+import moment from 'moment'
 const db = remote.getGlobal('db')
 
 export default {
   name: 'MainLayout',
-  // mixins: [dbFunctions],
+  mixins: [dustFn, weatherFn],
   components: { Key },
+  computed: {
+    ...mapState({
+      location: state => state.location.location,
+      station: state => state.location.dustStation
+    })
+  },
   data () {
     return {
       dialog: false
     }
   },
   async created () {
+    this.timer()
     ipcRenderer.on('keyPopup', (e) => {
       this.dialog = true
     })
     const keys = await db.keys.find({})
-    if (keys.length === 0) {
+    if (keys.length < 2) {
       this.dialog = true
     }
 
@@ -55,31 +66,46 @@ export default {
           break
       }
     })
-    const stations = await db.stations.find({})
     const updateAt = await db.setup.findOne({ id: 'updateStationsAt' })
-    if (stations.length > 0) {
-      this.$store.commit('stations/updateStations', stations.value)
-    }
     if (updateAt) {
       this.$store.commit('stations/updateUpdateAt', updateAt.value)
+    } else {
+      if (this.$store.state.keys.uuid) {
+        this.getAllStations()
+      }
     }
     const location = await db.location.findOne({ id: 'location' })
     if (location) {
       this.$store.commit('location/updateLocation', location.value)
+      this.getWeatherFromServer(location.value)
     }
     const nearStations = await db.location.findOne({ id: 'nearStations' })
     if (nearStations) {
-      console.log(nearStations)
       this.$store.commit('location/updateNearStations', nearStations.value)
     }
     const dustStation = await db.location.findOne({ id: 'dustStation' })
     if (dustStation) {
       this.$store.commit('location/updateDustStation', dustStation.value)
+      const rt = await this.getDustFromDb(dustStation.value)
+      this.checkTime(rt.createdAt)
     }
   },
   methods: {
-    init () {
-      this.$refs.view.initMap()
+    timer () {
+      setInterval(() => {
+        const current = moment().format('mm')
+        console.log(current)
+        switch (current) {
+          case '20':
+            this.getDustFromDb(this.station)
+            console.log('get dust')
+            break
+          case '40':
+            this.getWeatherFromServer(this.location)
+            console.log('get weather')
+            break
+        }
+      }, 60000)
     }
   }
 }

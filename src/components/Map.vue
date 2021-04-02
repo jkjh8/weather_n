@@ -11,12 +11,9 @@
           icon="fas fa-map-marked-alt"
           @click="clickIpLocationBtn"
         /> -->
-        <q-btn
-          flat
-          round
-          icon="search"
-          @click="dialog=true"
-        />
+        <q-btn flat round icon="search" @click="dialog=true">
+          <q-tooltip anchor="top middle" :offset="[0, 25]">주소 검색</q-tooltip>
+        </q-btn>
       </q-card-section>
     <q-card-section class="q-py-none">
       <div id="map"></div>
@@ -99,7 +96,9 @@ export default {
       this.geocoder = new kakao.maps.services.Geocoder()
       this.ps = new kakao.maps.services.Places()
 
-      this.moveMarker(position)
+      if (this.location) {
+        this.moveMarker(position)
+      }
     },
     moveMarker (position) {
       if (this.marker) {
@@ -126,7 +125,6 @@ export default {
     },
     async clickIpLocationBtn () {
       const result = await this.$axios.get('http://extreme-ip-lookup.com/json')
-      console.log(result)
       this.$store.dispatch('location/updateIpLocation', { lat: result.data.lat, lng: result.data.lon })
       this.moveMarkerLatLng({ lat: result.data.lat, lng: result.data.lon })
     }

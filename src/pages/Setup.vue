@@ -1,15 +1,15 @@
 <template>
   <q-page>
-    <GetStations />
+    <Dust />
   </q-page>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import GetStations from '../components/GetStation'
+import Dust from '../components/setup/SetupDust'
 
 export default {
-  components: { GetStations },
+  components: { Dust },
   computed: {
     ...mapState({
       uuid: state => state.keys.uuid

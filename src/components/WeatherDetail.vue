@@ -29,7 +29,7 @@
         </q-item>
         <q-item>
           <q-item-section>풍속</q-item-section>
-          <q-item-section>{{ weather.WSD }} %</q-item-section>
+          <q-item-section>{{ weather.WSD }} m/s</q-item-section>
         </q-item>
       </q-list>
     </q-card-section>

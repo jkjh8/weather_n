@@ -14,6 +14,42 @@
           <q-item-section>대기환경종합지수</q-item-section>
           <q-item-section>{{ this.grade(dust.khaiGrade) }}</q-item-section>
         </q-item>
+        <q-item>
+          <q-item-section>대기환경종합수치</q-item-section>
+          <q-item-section>{{ dust.khaiValue }}</q-item-section>
+        </q-item>
+        <q-item>
+          <q-item-section>미세먼지(PM10) 지수</q-item-section>
+          <q-item-section>{{ this.grade(dust.pm10Grade) }}</q-item-section>
+        </q-item>
+        <q-item>
+          <q-item-section>미세먼지(PM10) 수치</q-item-section>
+          <q-item-section>{{ dust.pm10Value }}&#181;g/&#13221;</q-item-section>
+        </q-item>
+        <q-item>
+          <q-item-section>미세먼지(PM2.5) 지수</q-item-section>
+          <q-item-section>{{ this.grade(dust.pm25Grade) }}</q-item-section>
+        </q-item>
+        <q-item>
+          <q-item-section>미세먼지(PM2.5) 수치</q-item-section>
+          <q-item-section>{{ dust.pm25Value }}&#181;g/&#13221;</q-item-section>
+        </q-item>
+        <q-item>
+          <q-item-section>이산화질소 농도</q-item-section>
+          <q-item-section>{{ dust.no2Value }}ppm</q-item-section>
+        </q-item>
+        <q-item>
+          <q-item-section>일산화탄소 농도</q-item-section>
+          <q-item-section>{{ dust.coValue }}ppm</q-item-section>
+        </q-item>
+        <q-item>
+          <q-item-section>오존 농도</q-item-section>
+          <q-item-section>{{ dust.o3Value }}ppm</q-item-section>
+        </q-item>
+        <q-item>
+          <q-item-section>아황산가스 농도</q-item-section>
+          <q-item-section>{{ dust.so2Value }}ppm</q-item-section>
+        </q-item>
       </q-list>
     </q-card-section>
     <q-separator />

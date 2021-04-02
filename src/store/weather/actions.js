@@ -10,7 +10,6 @@ export function updateWeather ({ commit }, payload) {
     weather[item.category] = item.obsrValue
   })
   commit('updateWeather', weather)
-  console.log(weather)
   let detail
   switch (weather.PTY) {
     case '0':
@@ -38,6 +37,5 @@ export function updateWeather ({ commit }, payload) {
       detail = { time: weather.time, temp: weather.T1H, name: '눈날림', icon: 'las la-snowflake', color: 'teal' }
       break
   }
-  console.log(detail)
   commit('updateWeatherDetail', detail)
 }

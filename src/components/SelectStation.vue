@@ -53,7 +53,6 @@ export default {
     async selectStation () {
       this.$store.commit('location/updateDustStation', this.nearStations[this.selected])
       const result = await db.dust.findOne({ stationName: this.nearStations[this.selected].name })
-      console.log(result)
       this.$store.commit('dust/updateDust', result)
     }
   }
