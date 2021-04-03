@@ -4,7 +4,7 @@
       <div class="text-h6">미세먼지 상세 정보</div>
       <div v-if="dust&&dustStation" class="text-caption">
         <span class="q-mx-sm">{{ dustStation.name }}</span>
-        <span class="q-mx-sm">{{ dust.dataTime }}</span>
+        <span class="q-mx-sm">{{ dust.dataTime }} 발표</span>
       </div>
     </q-card-section>
     <q-separator />

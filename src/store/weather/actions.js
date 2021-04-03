@@ -3,7 +3,7 @@ const db = require('electron').remote.getGlobal('db')
 
 export function updateWeather ({ commit }, payload) {
   const weather = {
-    time: moment(payload[0].baseDate).format('YYYY/MM/DD ') + payload[0].baseTime.substr(0, 2) + ':00',
+    time: moment(payload[0].baseDate).format('YYYY-MM-DD ') + payload[0].baseTime.substr(0, 2) + ':00',
     nx: payload[0].nx,
     ny: payload[0].ny
   }
@@ -39,6 +39,8 @@ export function updateWeather ({ commit }, payload) {
       break
   }
   commit('updateWeatherDetail', detail)
+  const now = moment().format('YYYY-MM-DD hh:mm:ss a')
+  commit('updatedAt', now)
   db.weather.update({ id: 'weather' }, { $set: { value: payload } }, { upsert: true })
   db.weather.update({ id: 'weatherSumm' }, { $set: { value: weather } }, { upsert: true })
   db.weather.update({ id: 'weatherDetail' }, { $set: { value: detail } }, { upsert: true })

@@ -1,6 +1,7 @@
 export default function () {
   return {
     dust: null,
-    dustAll: null
+    dustAll: null,
+    updatedAt: ''
   }
 }

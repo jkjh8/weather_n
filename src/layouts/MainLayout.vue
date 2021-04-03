@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr fff">
     <q-header class="bg-white">
       <q-toolbar class="row justify-center nav">
         <router-link to="/">Home</router-link>
@@ -9,12 +9,20 @@
     </q-header>
 
     <q-dialog v-model="dialog" persistent>
-      <Key @close="dialog=false" />
+      <Key :mode="mode" @close="dialog=false" />
     </q-dialog>
 
     <q-page-container>
       <router-view ref="view" />
     </q-page-container>
+
+    <q-footer>
+      <q-card>
+        <q-card-section class="text-caption text-center text-blue-grey-5">
+          본 자료는 한국환경공단(에어코리아)과 기상청에서 제공하는 실시간 관측 자료이며 실제 대기농도 수치와 다를 수 있습니다.
+        </q-card-section>
+      </q-card>
+    </q-footer>
   </q-layout>
 </template>
 
@@ -40,7 +48,8 @@ export default {
   },
   data () {
     return {
-      dialog: false
+      dialog: false,
+      mode: false
     }
   },
   async created () {
@@ -100,7 +109,7 @@ export default {
             this.getDustFromDb(this.station)
             console.log('get dust')
             break
-          case '40':
+          case '45':
             this.getWeatherFromServer(this.location)
             console.log('get weather')
             break

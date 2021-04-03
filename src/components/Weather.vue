@@ -7,9 +7,10 @@
           <span>발표 시간: {{ weatherDetail.time }}</span>
           <span class="q-ml-sm">
             <q-icon class="q-mr-xs" size="sm" :name="weatherDetail.icon" :color="weatherDetail.color"></q-icon>
+            <span>{{ weatherDetail.name }}</span>
+            <span class="q-ml-md">기온: {{ weatherDetail.temp }} {{ "&#8451;" }}</span>
+            <q-tooltip anchor="top middle" :offset="[0, 30]" content-class="_tooltip">갱신 시간:{{updatedAt}}</q-tooltip>
           </span>
-          <span>{{ weatherDetail.name }}</span>
-          <span class="q-ml-md">기온: {{ weatherDetail.temp }} {{ "&#8451;" }}</span>
         </span>
         <q-space />
         <q-btn
@@ -18,7 +19,7 @@
           icon="lens_blur"
           @click="dialog=true"
         >
-          <q-tooltip anchor="top middle" :offset="[0, 25]">상세 정보</q-tooltip>
+          <q-tooltip anchor="top middle" :offset="[0, 25]" content-class="_tooltip">상세 정보</q-tooltip>
         </q-btn>
         <q-btn
           flat
@@ -26,7 +27,7 @@
           icon="sync"
           @click="getWeather"
         >
-          <q-tooltip anchor="top middle" :offset="[0, 25]">새로 고침</q-tooltip>
+          <q-tooltip anchor="top middle" :offset="[0, 25]" content-class="_tooltip">새로 고침</q-tooltip>
         </q-btn>
       </q-card-section>
 
@@ -52,7 +53,8 @@ export default {
       dataKey: state => state.keys.data,
       location: state => state.location.location,
       weather: state => state.weather.weather,
-      weatherDetail: state => state.weather.weatherDetail
+      weatherDetail: state => state.weather.weatherDetail,
+      updatedAt: state => state.weather.updatedAt
     })
   },
   data () {
@@ -87,5 +89,9 @@ export default {
 </script>
 
 <style>
-
+._tooltip {
+  opacity: 0.7;
+  color: #343434;
+  background: #F0F0F0;
+}
 </style>

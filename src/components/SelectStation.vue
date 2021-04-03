@@ -32,9 +32,10 @@
 
 <script>
 import { mapState } from 'vuex'
-const db = require('electron').remote.getGlobal('db')
+import dustFn from '../mixins/dust'
 
 export default {
+  mixins: [dustFn],
   computed: {
     ...mapState({
       dustStation: state => state.location.dustStation,
@@ -51,9 +52,8 @@ export default {
   },
   methods: {
     async selectStation () {
+      this.getDustFromDb(this.nearStations[this.selected])
       this.$store.commit('location/updateDustStation', this.nearStations[this.selected])
-      const result = await db.dust.findOne({ stationName: this.nearStations[this.selected].name })
-      this.$store.commit('dust/updateDust', result)
     }
   }
 }

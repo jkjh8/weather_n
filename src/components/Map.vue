@@ -12,7 +12,7 @@
           @click="clickIpLocationBtn"
         /> -->
         <q-btn flat round icon="search" @click="dialog=true">
-          <q-tooltip anchor="top middle" :offset="[0, 25]">주소 검색</q-tooltip>
+          <q-tooltip anchor="top middle" :offset="[0, 25]" content-class="_tooltip">주소 검색</q-tooltip>
         </q-btn>
       </q-card-section>
     <q-card-section class="q-py-none">

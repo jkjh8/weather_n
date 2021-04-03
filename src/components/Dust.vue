@@ -13,6 +13,7 @@
           </span>
           <span class="q-mr-md">
             대기종합지수: {{ this.grade(dust.khaiGrade) }}
+            <q-tooltip anchor="top middle" :offset="[0, 30]" content-class="_tooltip">갱신 시간:{{updatedAt}}</q-tooltip>
           </span>
           <div>
             <q-icon></q-icon>
@@ -21,7 +22,7 @@
             <q-btn flat @click="dialog = true">
               <span><q-icon name="insert_chart_outlined"></q-icon></span>
               <span class="q-mx-sm">관측소: {{ dustStation.name }}</span>
-              <q-tooltip anchor="top middle" :offset="[0, 25]">관측소 선택</q-tooltip>
+              <q-tooltip anchor="top middle" :offset="[0, 30]" content-class="_tooltip">관측소 선택</q-tooltip>
             </q-btn>
           </span>
           <!-- <span class="q-mx-sm">
@@ -40,7 +41,7 @@
           icon="lens_blur"
           @click="detail=true"
         >
-          <q-tooltip anchor="top middle" :offset="[0, 25]">상세 정보</q-tooltip>
+          <q-tooltip anchor="top middle" :offset="[0, 30]" content-class="_tooltip">상세 정보</q-tooltip>
         </q-btn>
         <q-btn
           flat
@@ -48,7 +49,7 @@
           icon="sync"
           @click="getDust"
         >
-          <q-tooltip anchor="top middle" :offset="[0, 25]">새로 고침</q-tooltip>
+          <q-tooltip anchor="top middle" :offset="[0, 30]" content-class="_tooltip">새로 고침</q-tooltip>
         </q-btn>
       </q-card-section>
 
@@ -78,7 +79,8 @@ export default {
       dustStation: state => state.location.dustStation,
       nearStations: state => state.location.nearStations,
       dust: state => state.dust.dust,
-      dustAll: state => state.dust.dustAll
+      dustAll: state => state.dust.dustAll,
+      updatedAt: state => state.dust.updatedAt
     })
   },
   data () {
@@ -117,3 +119,11 @@ export default {
   }
 }
 </script>
+
+<style>
+._tooltip {
+  opacity: 0.7;
+  color: #343434;
+  background: #F0F0F0;
+}
+</style>

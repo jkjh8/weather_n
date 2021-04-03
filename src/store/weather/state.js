@@ -1,6 +1,7 @@
 export default function () {
   return {
     weather: null,
-    weatherDetail: null
+    weatherDetail: null,
+    updatedAt: ''
   }
 }

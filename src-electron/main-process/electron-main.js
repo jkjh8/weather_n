@@ -1,22 +1,9 @@
-import { app, BrowserWindow, ipcMain, net, nativeTheme } from 'electron'
+import { app, BrowserWindow, nativeTheme } from 'electron'
 // import path from 'path'
 // const http = require('./api/http')
 import db from './api/db'
 
 global.db = db
-
-// import low from 'lowdb'
-// import FileAsync from 'lowdb/adapters/FileAsync'
-// let db
-
-// async function dbInit () {
-//   const adapter = new FileAsync(path.join(app.getPath('userData'), '/.db/db.json'))
-//   db = await low(adapter)
-//   db.defaults({ stations: [], keys: [], location: [], setup: [] }).write()
-//   global.db = db
-// }
-
-// dbInit()
 
 try {
   if (process.platform === 'win32' && nativeTheme.shouldUseDarkColors === true) {
@@ -24,10 +11,6 @@ try {
   }
 } catch (_) { }
 
-/**
- * Set `__statics` path to static files in production;
- * The reason we are setting it here is that the path needs to be evaluated at runtime
- */
 if (process.env.PROD) {
   global.__statics = __dirname
 }
@@ -36,23 +19,15 @@ let mainWindow
 global.mainWindow = mainWindow
 
 function createWindow () {
-  /**
-   * Initial window options
-   */
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 600,
     useContentSize: true,
     webPreferences: {
-      // Change from /quasar.conf.js > electron > nodeIntegration;
-      // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       contextIsolation: false,
       enableRemoteModule: true
-
-      // More info: /quasar-cli/developing-electron-apps/electron-preload-script
-      // preload: path.resolve(__dirname, 'electron-preload.js')
     }
   })
 
@@ -79,33 +54,4 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.on('weather', (e, query) => {
-  const req = net.request(query)
-  req.on('response', (response) => {
-    response.on('data', (chunk) => {
-      const rtJson = JSON.parse(chunk.toString())
-      mainWindow.webContents.send('weather', rtJson.response)
-    })
-  })
-  req.end()
-})
-
-// const JSONStream = require('JSONStream')
-// const es = require('event-stream')
-
-ipcMain.on('dust', (e, query) => {
-  let rtdata = ''
-  const req = net.request(query)
-  req.on('response', (response) => {
-    response.on('data', (chunk) => {
-      console.log(chunk.toString())
-      rtdata += chunk
-      // const rtJson = JSON.parse(chunk.toString())
-      // mainWindow.webContents.send('dust', rtJson.response)
-    })
-    response.on('end', () => {
-      console.log('end                     ', rtdata.toString())
-    })
-  })
-  req.end()
-})
+import './api/socket'

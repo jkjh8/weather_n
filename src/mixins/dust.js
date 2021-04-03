@@ -33,11 +33,26 @@ export default {
       }
     },
     async getDustFromDb (station) {
-      const r = await api.get(`/getdust?uuid=${encodeURIComponent(this.uuid)}&station=${encodeURIComponent('3공단')}`)
-      console.log('r', r)
-      const result = await db.dust.findOne({ stationName: station.name })
-      this.$store.commit('dust/updateDust', result)
-      return result
+      try {
+        const r = await api.get(`/getdust?uuid=${encodeURIComponent(this.uuid)}&station=${encodeURIComponent(station.name)}`)
+        // const result = await db.dust.findOne({ stationName: station.name })
+        this.$store.dispatch('dust/updateDust', r.data.dust)
+        return r.data.dust
+      } catch (err) {
+        const code = err.response.status
+        if (code === 401 || code === 403) {
+          console.log('error')
+          this.$q.notify({
+            timeout: 2000,
+            color: 'negative',
+            message: '사용자 계정에 문제가 있습니다.',
+            caption: '계정을 새로 등록 하거나 관리자에게 문의하세요.',
+            icon: 'report_problem',
+            position: 'center',
+            actions: [{ icon: 'close', color: 'white' }]
+          })
+        }
+      }
     },
     async getAllDustData () {
       const query = `ServiceKey=${this.dataKey}&returnType=json&pageNo=1&numOfRows=1000&sidoName=전국&ver=1.0`

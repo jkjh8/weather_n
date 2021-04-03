@@ -5,3 +5,7 @@ export function updateWeather (state, payload) {
 export function updateWeatherDetail (state, payload) {
   state.weatherDetail = payload
 }
+
+export function updatedAt (state, payload) {
+  state.updatedAt = payload
+}

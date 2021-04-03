@@ -11,7 +11,7 @@
             <q-btn @click="update">Update</q-btn>
           </q-item-section>
         </q-item>
-        <q-item>
+        <!-- <q-item>
           <q-item-section>
             <q-item-label>미세먼지 수치 갱신</q-item-label>
             <q-item-label v-if="dust" caption>{{ timeFormat(dust.updatedAt) }}</q-item-label>
@@ -19,7 +19,7 @@
           <q-item-section side>
             <q-btn @click="getAllDustData">Update</q-btn>
           </q-item-section>
-        </q-item>
+        </q-item> -->
       </q-list>
     </q-card-section>
   </q-card>
