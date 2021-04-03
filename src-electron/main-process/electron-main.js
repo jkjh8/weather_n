@@ -90,13 +90,21 @@ ipcMain.on('weather', (e, query) => {
   req.end()
 })
 
+// const JSONStream = require('JSONStream')
+// const es = require('event-stream')
+
 ipcMain.on('dust', (e, query) => {
+  let rtdata = ''
   const req = net.request(query)
   req.on('response', (response) => {
     response.on('data', (chunk) => {
       console.log(chunk.toString())
+      rtdata += chunk
       // const rtJson = JSON.parse(chunk.toString())
       // mainWindow.webContents.send('dust', rtJson.response)
+    })
+    response.on('end', () => {
+      console.log('end                     ', rtdata.toString())
     })
   })
   req.end()

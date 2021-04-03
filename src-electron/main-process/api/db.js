@@ -12,6 +12,7 @@ function dbInit (file) {
 export default {
   setup: dbInit('setup.db'),
   dust: dbInit('dust.db'),
+  weather: dbInit('weather.db'),
   stations: dbInit('stations.db'),
   location: dbInit('location.db'),
   keys: dbInit('auth.db')

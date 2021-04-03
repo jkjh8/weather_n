@@ -1,4 +1,5 @@
 import moment from 'moment'
+const db = require('electron').remote.getGlobal('db')
 
 export function updateWeather ({ commit }, payload) {
   const weather = {
@@ -38,4 +39,7 @@ export function updateWeather ({ commit }, payload) {
       break
   }
   commit('updateWeatherDetail', detail)
+  db.weather.update({ id: 'weather' }, { $set: { value: payload } }, { upsert: true })
+  db.weather.update({ id: 'weatherSumm' }, { $set: { value: weather } }, { upsert: true })
+  db.weather.update({ id: 'weatherDetail' }, { $set: { value: detail } }, { upsert: true })
 }

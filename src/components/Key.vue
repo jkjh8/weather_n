@@ -45,7 +45,7 @@ export default {
     async getApiKeys () {
       this.showLoading()
       this.updateUUID()
-      const result = await api.get(`/getApi?uuid=${this.uuid}`)
+      const result = await api.get(`/getApi?uuid=${encodeURIComponent(this.uuid)}`)
       this.updateKeys(result)
     },
     updateKeys (data) {

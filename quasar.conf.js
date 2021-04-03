@@ -84,12 +84,12 @@ module.exports = function (/* ctx */) {
         '/1360000': {
           target: 'http://apis.data.go.kr',
           changeOrigin: true
-        },
-        '/getStations': {
-          target: 'https://us-central1-weatherpicker.cloudfunctions.net',
-          changeOrigin: true,
-          ws: true
         }
+        // '/getStations': {
+        //   target: 'https://us-central1-weatherpicker.cloudfunctions.net',
+        //   changeOrigin: true,
+        //   ws: true
+        // }
       }
     },
 

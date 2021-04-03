@@ -33,6 +33,8 @@ export default {
       }
     },
     async getDustFromDb (station) {
+      const r = await api.get(`/getdust?uuid=${encodeURIComponent(this.uuid)}&station=${encodeURIComponent('3공단')}`)
+      console.log('r', r)
       const result = await db.dust.findOne({ stationName: station.name })
       this.$store.commit('dust/updateDust', result)
       return result
