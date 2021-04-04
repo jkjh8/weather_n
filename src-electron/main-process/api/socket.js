@@ -4,8 +4,14 @@ import db from './db'
 const clients = []
 /* db */
 const server = net.createServer((client) => {
-  client.on('data', (data) => {
-    console.log(data)
+  client.on('data', async (data) => {
+    const req = data.toString()
+    console.log(req)
+    if (req === 'get') {
+      const r = await db.weather.findOne({ id: 'weatherSumm' })
+      const rt = `time:${r.value.time},pty:${r.value.PTY},reh:${r.value.REH},rn1:${r.value.RN1},t1h:${r.value.T1H},uuu:${r.value.UUU},vec:${r.value.VEC},vvv:${r.value.VVV},wsd:${r.value.WSD}`
+      client.write(rt)
+    }
   })
   client.on('end', () => {
     clients.splice(clients.indexOf(client), 1)
@@ -17,17 +23,17 @@ server.addListener('connection', (c) => {
 })
 
 async function startServer () {
-  let port = await db.setup.find({ id: 'socketport' })
-  if (!port) {
-    port = 9999
-  }
+  let port
+  const r = await db.setup.findOne({ id: 'socketport' })
+  r ? port = r.value : port = 19999
+  console.log(port)
   server.listen(port, () => {
-    console.log('Server listening: ' + JSON.stringify(server.address()))
+    console.log('Server listening: ' + port)
     server.on('close', () => {
       console.log('Server Closed')
     })
     server.on('error', (err) => {
-      console.log('Server Error: ', JSON.stringify(err))
+      console.log('Server Error: ', err)
     })
   })
 }

@@ -1,6 +1,6 @@
 <template>
-  <q-card>
-    <q-card-section class="fit row no-wrap">
+  <q-card flat square>
+    <q-card-section class="fit row no-wrap q-py-sm">
       <q-list class="full-width">
         <q-item>
           <q-item-section>

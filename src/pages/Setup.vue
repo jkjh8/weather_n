@@ -2,6 +2,7 @@
   <q-page>
     <Dust />
     <Keys />
+    <Socket />
   </q-page>
 </template>
 
@@ -9,20 +10,14 @@
 import { mapState } from 'vuex'
 import Dust from '../components/setup/SetupDust'
 import Keys from '../components/setup/SetupKey'
+import Socket from '../components/setup/SetupSocket'
 
 export default {
-  components: { Dust, Keys },
+  components: { Dust, Keys, Socket },
   computed: {
     ...mapState({
       uuid: state => state.keys.uuid
     })
-  },
-  methods: {
-    getStation () {
-      this.$axios.get(`https://us-central1-weatherpicker.cloudfunctions.net/getStation?uuid=${encodeURIComponent(this.uuid)}`).then(res => {
-        console.log(res)
-      })
-    }
   }
 }
 </script>

@@ -17,8 +17,8 @@
     </q-page-container>
 
     <q-footer>
-      <q-card>
-        <q-card-section class="text-caption text-center text-blue-grey-5">
+      <q-card flat square>
+        <q-card-section class="text-caption text-center text-grey-7">
           본 자료는 한국환경공단(에어코리아)과 기상청에서 제공하는 실시간 관측 자료이며 실제 대기농도 수치와 다를 수 있습니다.
         </q-card-section>
       </q-card>

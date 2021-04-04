@@ -1,11 +1,11 @@
 <template>
-  <q-card>
-    <q-card-section class="fit row no-wrap">
+  <q-card flat square>
+    <q-card-section class="fit row no-wrap q-py-sm">
       <q-list class="full-width">
         <q-item>
           <q-item-section>
             <q-item-label>ID</q-item-label>
-            <q-item-label caption>사용자 api key</q-item-label>
+            <q-item-label caption>사용자 API KEY 등록</q-item-label>
           </q-item-section>
           <q-item-section side>
             <q-btn @click="update">Update</q-btn>
