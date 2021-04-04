@@ -26,11 +26,12 @@ import { mapState } from 'vuex'
 import { remote, shell } from 'electron'
 import { api } from '../boot/axios'
 import loading from '../mixins/loads'
+import dustFn from '../mixins/dust'
 const db = remote.getGlobal('db')
 
 export default {
   name: 'GetKey',
-  mixins: [loading],
+  mixins: [loading, dustFn],
   props: ['mode'],
   computed: {
     ...mapState({
@@ -59,6 +60,7 @@ export default {
             db.keys.update({ id: 'data' }, { $set: { value: key.key.key } }, { upsert: true })
           }
         })
+        this.getAllStations()
       } catch (err) {
         switch (err.status) {
           case 400:

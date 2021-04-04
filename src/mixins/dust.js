@@ -33,9 +33,10 @@ export default {
       }
     },
     async getDustFromDb (station) {
+      if (!station) station = this.station
       try {
         const r = await api.get(`/getdust?uuid=${encodeURIComponent(this.uuid)}&station=${encodeURIComponent(station.name)}`)
-        // const result = await db.dust.findOne({ stationName: station.name })
+        await db.dust.update({ id: 'dust' }, { $set: { value: r.data.dust } }, { upsert: true })
         this.$store.dispatch('dust/updateDust', r.data.dust)
         return r.data.dust
       } catch (err) {

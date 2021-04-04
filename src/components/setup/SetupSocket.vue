@@ -20,7 +20,7 @@
             <q-btn @click="updateTcp">Update</q-btn>
           </q-item-section>
         </q-item>
-        <q-item>
+        <!-- <q-item>
           <q-item-section>
             <q-item-label>Serial Port</q-item-label>
             <q-item-label caption>listening {{comm}}</q-item-label>
@@ -49,7 +49,7 @@
           <q-item-section side>
             <q-btn @click="updateSerial">update</q-btn>
           </q-item-section>
-        </q-item>
+        </q-item> -->
       </q-list>
     </q-card-section>
   </q-card>

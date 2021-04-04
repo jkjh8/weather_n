@@ -74,6 +74,8 @@
 
 <script>
 import loading from '../mixins/loads'
+import weatherFn from '../mixins/weather'
+import dustFn from '../mixins/dust'
 import { mapState } from 'vuex'
 import convertXY from '../api/convertXY'
 import { remote } from 'electron'
@@ -81,7 +83,7 @@ const db = remote.getGlobal('db')
 
 export default {
   name: 'PageIndex',
-  mixins: [loading],
+  mixins: [loading, weatherFn, dustFn],
   computed: {
     ...mapState({
       location: state => state.location.location
@@ -221,7 +223,7 @@ export default {
     clickList (idx) {
       const item = this.places[idx]
       const position = new kakao.maps.LatLng(item.y, item.x)
-      this.marker.setPosition(position)
+      this.moveMarker(position)
       this.map.setCenter(position)
       this.place = {
         address_name: item.address_name,
@@ -230,11 +232,13 @@ export default {
         y: item.y
       }
     },
-    submit () {
+    async submit () {
       if (this.place) {
         this.place.xy = convertXY(this.place.y, this.place.x)
         this.$store.dispatch('location/updateLocation', this.place)
         db.location.update({ id: 'location' }, { $set: { value: this.place } }, { upsert: true })
+        this.getWeatherFromServer(this.location)
+        this.getDustFromDb()
       }
     }
   }

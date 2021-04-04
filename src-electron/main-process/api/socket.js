@@ -1,18 +1,15 @@
 import net from 'net'
 import db from './db'
+import api from './dataApi'
 
 const clients = []
-/* db */
 const server = net.createServer((client) => {
   client.on('data', async (data) => {
     const req = data.toString()
-    console.log(req)
-    if (req === 'get') {
-      const r = await db.weather.findOne({ id: 'weatherSumm' })
-      const rt = `time:${r.value.time},pty:${r.value.PTY},reh:${r.value.REH},rn1:${r.value.RN1},t1h:${r.value.T1H},uuu:${r.value.UUU},vec:${r.value.VEC},vvv:${r.value.VVV},wsd:${r.value.WSD}`
-      client.write(rt)
-    }
+    const r = await api(req.toLowerCase())
+    client.write(r)
   })
+
   client.on('end', () => {
     clients.splice(clients.indexOf(client), 1)
   })

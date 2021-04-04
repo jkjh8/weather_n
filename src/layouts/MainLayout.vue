@@ -76,6 +76,7 @@ export default {
       }
     })
     const updateAt = await db.setup.findOne({ id: 'updateStationsAt' })
+    console.log(updateAt)
     if (updateAt) {
       this.$store.commit('stations/updateUpdateAt', updateAt.value)
     } else {
